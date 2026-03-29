@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Inbox — DS Webmail</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{background:#0a1628;color:#c8d6e5;font-family:'Segoe UI',sans-serif}
+.nav{background:#111d32;border-bottom:1px solid #1a2d4a;padding:12px 24px;display:flex;justify-content:space-between;align-items:center}
+.nav .logo{color:#00b4d8;font-weight:700;font-size:16px}
+.nav a{color:#5a6f8a;font-size:13px;text-decoration:none;margin-left:16px}.nav a:hover{color:#00b4d8}
+.container{max-width:800px;margin:24px auto;padding:0 20px}
+h2{font-size:18px;margin-bottom:16px;color:#fff}
+.email-row{display:block;background:#111d32;border:1px solid #1a2d4a;border-radius:10px;padding:16px 20px;margin-bottom:8px;text-decoration:none;transition:border-color .2s}
+.email-row:hover{border-color:#00b4d8}
+.email-row .from{color:#00b4d8;font-size:13px;font-weight:600}
+.email-row .subj{color:#c8d6e5;font-size:14px;margin-top:2px}
+.email-row .date{color:#3d5272;font-size:11px;float:right}
+.tools{background:#111d32;border:1px solid #1a2d4a;border-radius:10px;padding:16px 20px;margin-bottom:16px}
+.tools h3{color:#00b4d8;font-size:14px;margin-bottom:8px}
+.tools input{padding:8px 12px;background:#0a1628;border:1px solid #1a2d4a;border-radius:6px;color:#c8d6e5;font-size:13px;width:300px}
+.tools button{padding:8px 16px;background:#00b4d8;color:#0a1628;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:13px}
+#link-result{margin-top:8px;font-size:12px;color:#5a6f8a;font-family:monospace;white-space:pre-wrap;max-height:200px;overflow-y:auto}
+</style></head><body>
+<div class="nav"><span class="logo">📧 DS Webmail</span><div><span style="color:#8b9dc3;font-size:13px">{{ user }}</span><a href="/logout">Logout</a></div></div>
+<div class="container">
+<h2>Inbox ({{ emails|length }})</h2>
+{% for e in emails %}
+<a href="/email/{{ e.id }}" class="email-row"><span class="date">{{ e.date }}</span><div class="from">{{ e['from'] }}</div><div class="subj">{{ e.subject }}</div></a>
+{% endfor %}
+
+<div class="tools" style="margin-top:24px">
+<h3>🔗 Link Checker</h3>
+<p style="color:#5a6f8a;font-size:12px;margin-bottom:8px">Verify external links before clicking them</p>
+<div style="display:flex;gap:8px">
+<input type="text" id="check-url" placeholder="https://example.com">
+<button onclick="checkLink()">Check</button>
+</div>
+<div id="link-result"></div>
+</div>
+</div>
+<script>
+async function checkLink() {
+  const url = document.getElementById('check-url').value;
+  const res = document.getElementById('link-result');
+  if (!url) return;
+  res.textContent = 'Checking...';
+  const fd = new FormData(); fd.append('url', url);
+  const resp = await fetch('/check-link', {method:'POST', body:fd});
+  const data = await resp.json();
+  if (data.error) res.textContent = 'Error: ' + data.error;
+  else res.textContent = 'Status: ' + data.status + ' | Size: ' + data.length + ' bytes\n\n' + (data.preview||'');
+}
+</script>
+</body></html>

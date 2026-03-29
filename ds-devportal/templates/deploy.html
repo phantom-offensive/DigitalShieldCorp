@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Deployment — DS DevPortal</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{background:#0a1628;color:#c8d6e5;font-family:'Segoe UI',sans-serif}
+.nav{background:#111d32;border-bottom:1px solid #1a2d4a;padding:12px 24px;display:flex;justify-content:space-between;align-items:center}
+.nav .logo{color:#00b4d8;font-weight:700;font-size:16px}.nav a{color:#5a6f8a;font-size:13px;text-decoration:none;margin-left:16px}
+.container{max-width:900px;margin:24px auto;padding:0 20px}
+h2{font-size:20px;color:#fff;margin-bottom:16px}
+pre{background:#0a0e1a;border:1px solid #1a2d4a;padding:16px;border-radius:8px;font-size:12px;overflow-x:auto;color:#c8d6e5}
+.warn{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:12px;color:#ef4444;font-size:13px;margin-bottom:16px}
+</style></head><body>
+<div class="nav"><span class="logo">💻 DS DevPortal</span><div><a href="/dashboard">Dashboard</a><a href="/logout">Logout</a></div></div>
+<div class="container">
+<h2>🚀 Deployment Configuration</h2>
+<div class="warn">⚠ This page contains sensitive infrastructure credentials. Do not share externally.</div>
+<h3 style="color:#00b4d8;margin-bottom:10px">SSH Bastion (Jumphost)</h3>
+<pre>Host:     {{ config.jumphost.host }}
+User:     {{ config.jumphost.user }}
+Password: {{ config.jumphost.password }}
+Key:      {{ config.deploy_key }}</pre>
+
+<h3 style="color:#00b4d8;margin:20px 0 10px">Deploy Targets</h3>
+<pre>{% for t in config.targets %}{{ t }}
+{% endfor %}</pre>
+
+<h3 style="color:#00b4d8;margin:20px 0 10px">Deployment Command</h3>
+<pre>sshpass -p '{{ config.jumphost.password }}' ssh -o StrictHostKeyChecking=no {{ config.jumphost.user }}@{{ config.jumphost.host }} './deploy.sh'</pre>
+</div></body></html>

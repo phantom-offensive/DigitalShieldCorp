@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>{{ email.subject }} — DS Webmail</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{background:#0a1628;color:#c8d6e5;font-family:'Segoe UI',sans-serif}
+.nav{background:#111d32;border-bottom:1px solid #1a2d4a;padding:12px 24px;display:flex;justify-content:space-between;align-items:center}
+.nav .logo{color:#00b4d8;font-weight:700;font-size:16px}.nav a{color:#5a6f8a;font-size:13px;text-decoration:none;margin-left:16px}.nav a:hover{color:#00b4d8}
+.container{max-width:800px;margin:24px auto;padding:0 20px}
+.email-card{background:#111d32;border:1px solid #1a2d4a;border-radius:12px;overflow:hidden}
+.email-header{padding:20px;border-bottom:1px solid #1a2d4a}
+.email-header h2{font-size:18px;color:#fff;margin-bottom:8px}
+.meta{color:#5a6f8a;font-size:12px}.meta span{margin-right:16px}
+.email-body{padding:24px;font-size:14px;line-height:1.8;white-space:pre-wrap;color:#c8d6e5}
+</style></head><body>
+<div class="nav"><span class="logo">📧 DS Webmail</span><div><a href="/inbox">← Inbox</a><a href="/logout">Logout</a></div></div>
+<div class="container">
+<div class="email-card">
+<div class="email-header"><h2>{{ email.subject }}</h2><div class="meta"><span>From: {{ email['from'] }}</span><span>Date: {{ email.date }}</span></div></div>
+<div class="email-body">{{ email.body }}</div>
+</div></div>
+</body></html>

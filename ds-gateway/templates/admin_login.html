@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Employee Portal — Digital Shield Corporation</title><link rel="stylesheet" href="/static/style.css"></head>
+<body>
+<div class="navbar"><div class="logo"><span class="shield">🛡️</span> Digital Shield Corp</div>
+<nav><a href="/">Home</a><a href="/admin" class="active" style="color:#f59e0b">Employee Portal</a></nav></div>
+<div class="login-box">
+<div style="text-align:center;font-size:48px;margin-bottom:12px">🛡️</div>
+<h2>Employee Portal</h2>
+<p style="text-align:center;color:#5a6f8a;font-size:13px;margin-bottom:24px">Authorized personnel only</p>
+{% if error %}<div class="error-msg">{{ error }}</div>{% endif %}
+<form method="POST">
+<div class="field"><label>Username</label><input type="text" name="username" autofocus required></div>
+<div class="field"><label>Password</label><input type="password" name="password" required></div>
+<button type="submit" class="btn-full">Sign In</button>
+</form>
+<p style="text-align:center;margin-top:16px;font-size:11px;color:#3d5272">Contact IT if you've forgotten your credentials</p>
+</div>
+<div class="footer">&copy; 2026 Digital Shield Corporation</div>
+</body></html>

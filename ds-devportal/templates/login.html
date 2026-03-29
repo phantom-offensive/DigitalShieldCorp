@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>DS DevPortal — Login</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{background:#0a1628;color:#c8d6e5;font-family:'Segoe UI',sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh}
+.box{background:#111d32;border:1px solid #1a2d4a;border-radius:16px;padding:40px;width:100%;max-width:380px}
+.box h1{text-align:center;color:#00b4d8;font-size:22px;margin-bottom:4px}
+.box .sub{text-align:center;color:#5a6f8a;font-size:12px;margin-bottom:24px}
+.field{margin-bottom:14px}.field label{display:block;font-size:11px;color:#5a6f8a;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.field input{width:100%;padding:11px 14px;background:#0a1628;border:1px solid #1a2d4a;border-radius:8px;color:#c8d6e5;font-size:14px}.field input:focus{border-color:#00b4d8;outline:none}
+.btn{width:100%;padding:12px;background:#00b4d8;color:#0a1628;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;margin-top:4px}
+.btn-alt{background:#1a2d4a;color:#00b4d8;margin-top:8px}
+.error{background:rgba(239,68,68,.12);color:#ef4444;padding:10px;border-radius:8px;margin-bottom:14px;font-size:13px;text-align:center}
+.note{text-align:center;color:#3d5272;font-size:11px;margin-top:16px}
+</style></head><body>
+<div class="box"><div style="text-align:center;font-size:48px;margin-bottom:12px">💻</div>
+<h1>DS DevPortal</h1><div class="sub">Developer & Deployment Portal</div>
+{% if error %}<div class="error">{{ error }}</div>{% endif %}
+<form method="POST"><input type="hidden" name="action" value="login" id="form-action">
+<div class="field"><label>Username</label><input name="username" autofocus required></div>
+<div class="field"><label>Password</label><input type="password" name="password" required></div>
+<button type="submit" class="btn">Sign In</button>
+<button type="submit" class="btn btn-alt" onclick="document.getElementById('form-action').value='register'">Register (Contractors)</button>
+</form>
+<div class="note">Open registration available for external contractors</div>
+</div></body></html>

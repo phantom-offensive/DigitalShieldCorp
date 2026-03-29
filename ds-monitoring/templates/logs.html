@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Logs — DS Monitoring</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{background:#0a1628;color:#c8d6e5;font-family:'Segoe UI',sans-serif}
+.nav{background:#111d32;border-bottom:1px solid #1a2d4a;padding:12px 24px;display:flex;justify-content:space-between}
+.nav .logo{color:#10b981;font-weight:700;font-size:16px}.nav a{color:#5a6f8a;font-size:13px;text-decoration:none;margin-left:16px}
+.container{max-width:900px;margin:24px auto;padding:0 20px}
+pre{background:#0a0e1a;border:1px solid #1a2d4a;padding:16px;border-radius:8px;font-size:11px;max-height:500px;overflow-y:auto}
+.field input{padding:8px 12px;background:#0a1628;border:1px solid #1a2d4a;border-radius:6px;color:#c8d6e5;font-size:13px;width:400px}
+.btn{padding:8px 16px;background:#10b981;color:#0a1628;border:none;border-radius:6px;font-weight:600;cursor:pointer}
+</style></head><body>
+<div class="nav"><span class="logo">📊 DS Monitoring</span><div><a href="/">Dashboard</a><a href="/config">Config</a><a href="/logs">Logs</a></div></div>
+<div class="container">
+<h2 style="font-size:20px;color:#fff;margin-bottom:16px">Log Viewer</h2>
+<form method="GET" style="display:flex;gap:8px;margin-bottom:16px">
+<div class="field"><input name="file" value="{{ logfile }}" placeholder="/var/log/syslog"></div>
+<button type="submit" class="btn">View</button>
+</form>
+<pre>{{ content }}</pre>
+</div></body></html>

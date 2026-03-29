@@ -1,0 +1,17 @@
+{
+  "organization": "Digital Shield Corporation",
+  "classification": "TOP SECRET",
+  "flag": "FLAG{ds_9_vault_secrets_exfiltrated}",
+  "secrets": [
+    {"name": "domain_admin_password", "value": "D0m@1n_Adm1n_2026!", "type": "credential", "environment": "production"},
+    {"name": "domain_admin_ntlm", "value": "aad3b435b51404eeaad3b435b51404ee:e19ccf75ee54e06b06a5907af13cef42", "type": "hash"},
+    {"name": "krbtgt_hash", "value": "502d4f9c68b9c5c7d7e4b3a2f1e0d9c8", "type": "hash"},
+    {"name": "aws_root_access_key", "value": "AKIAI44QH8DHBEXAMPLE", "type": "api_key"},
+    {"name": "aws_root_secret_key", "value": "je7MtGbClwBF/2Zp9Utk/h3yCo8nvbEXAMPLEKEY", "type": "api_key"},
+    {"name": "stripe_production_key", "value": "sk_live_FAKE_DSC_LAB_NOT_REAL_KEY", "type": "api_key"},
+    {"name": "database_master_password", "value": "M@st3r_DB_R00t_2026!", "type": "credential"},
+    {"name": "vpn_root_ca_passphrase", "value": "R00t_CA_Ph@se_2026!", "type": "credential"},
+    {"name": "backup_encryption_key", "value": "aes256gcm-master-key-2026-x9k2m7p4q8", "type": "encryption"},
+    {"name": "code_signing_cert_password", "value": "C0d3_S1gn_2026!", "type": "credential"}
+  ]
+}

@@ -1,0 +1,7 @@
+id,name,email,ssn,salary,department
+1,James Reynolds,j.reynolds@digitalshield.local,123-45-6789,125000,Security
+2,Michelle Chen,m.chen@digitalshield.local,234-56-7890,135000,DevOps
+3,Adrian Kowalski,a.kowalski@digitalshield.local,345-67-8901,115000,SysAdmin
+4,Dayo Okafor,d.okafor@digitalshield.local,456-78-9012,195000,Executive
+5,Sarah Martinez,s.martinez@digitalshield.local,567-89-0123,95000,HR
+6,Kevin Park,k.park@digitalshield.local,678-90-1234,105000,Engineering

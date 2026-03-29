@@ -1,0 +1,24 @@
+
+╔════════════════════════════════════════════════════════════╗
+║                                                            ║
+║   FLAG{ds_10_full_kill_chain_complete}                     ║
+║                                                            ║
+║   DIGITAL SHIELD CORPORATION — FULL COMPROMISE             ║
+║                                                            ║
+║   You've completed the entire attack assessment:           ║
+║                                                            ║
+║   Phase 1: Initial Access (Gateway)              [x]       ║
+║   Phase 2: Email Intelligence (Webmail)          [x]       ║
+║   Phase 3: Session Hijack (DevPortal + Redis)    [x]       ║
+║   Phase 4: Bastion Breach (Jumphost)             [x]       ║
+║   Phase 5: Data Exfiltration (Filestore)         [x]       ║
+║   Phase 6: Monitoring Takeover                   [x]       ║
+║   Phase 7: Database Compromise                   [x]       ║
+║   Phase 8: Vault Secrets Exfiltrated             [x]       ║
+║   Phase 9: Full Kill Chain — Root on Vault       [x]       ║
+║                                                            ║
+║   Total Points: 1750 / 1750                                ║
+║                                                            ║
+║   All operations performed through Phantom C2.             ║
+║                                                            ║
+╚════════════════════════════════════════════════════════════╝

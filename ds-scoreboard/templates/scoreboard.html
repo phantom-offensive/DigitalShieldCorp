@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digital Shield Corp — CTF Scoreboard</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0e1a;color:#e0e7ff;font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+.header{background:linear-gradient(135deg,#0f172a 0%,#1e1b4b 100%);border-bottom:2px solid #3730a3;padding:24px 40px;text-align:center}
+.header h1{font-size:28px;color:#818cf8;margin-bottom:4px;letter-spacing:1px}
+.header .sub{color:#6366f1;font-size:13px;text-transform:uppercase;letter-spacing:3px}
+.header .shield{font-size:48px;margin-bottom:8px}
+.container{max-width:1100px;margin:0 auto;padding:24px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.stat{background:#111827;border:1px solid #1f2937;border-radius:12px;padding:20px;text-align:center}
+.stat .val{font-size:32px;font-weight:700;color:#818cf8}
+.stat .lbl{font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.card{background:#111827;border:1px solid #1f2937;border-radius:12px;margin-bottom:16px;overflow:hidden}
+.card-head{padding:16px 20px;border-bottom:1px solid #1f2937;display:flex;align-items:center;gap:10px}
+.card-head h2{font-size:16px;color:#c7d2fe}
+.card-body{padding:20px}
+.flag-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.flag-cell{background:#0f172a;border:1px solid #1f2937;border-radius:10px;padding:14px;text-align:center;transition:all .2s}
+.flag-cell.captured{background:rgba(16,185,129,.12);border-color:#10b981}
+.flag-cell .num{font-size:22px;font-weight:700;color:#374151}
+.flag-cell.captured .num{color:#10b981}
+.flag-cell .name{font-size:11px;color:#6b7280;margin-top:4px}
+.flag-cell.captured .name{color:#10b981}
+.flag-cell .pts{font-size:10px;color:#4b5563;margin-top:2px}
+.flag-cell .diff{font-size:9px;padding:2px 6px;border-radius:4px;display:inline-block;margin-top:4px}
+.diff-Easy{background:rgba(16,185,129,.15);color:#10b981}
+.diff-Medium{background:rgba(245,158,11,.15);color:#f59e0b}
+.diff-Hard{background:rgba(239,68,68,.15);color:#ef4444}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:10px;color:#6b7280;font-size:11px;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #1f2937}
+td{padding:10px;border-bottom:1px solid #0f172a;font-size:13px}
+tr:hover td{background:rgba(99,102,241,.05)}
+.submit-box{display:flex;gap:10px;margin-bottom:12px}
+.submit-box input{flex:1;padding:12px 16px;background:#0f172a;border:1px solid #2a3050;border-radius:8px;color:#e0e7ff;font-size:14px;font-family:monospace}
+.submit-box input:focus{border-color:#6366f1;outline:none}
+.btn{padding:12px 24px;background:#6366f1;color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px}
+.btn:hover{background:#4f46e5}
+.btn-sm{padding:6px 12px;font-size:11px;border-radius:6px}
+.result{padding:10px;border-radius:8px;margin-bottom:12px;font-size:14px;display:none}
+.result.ok{display:block;background:rgba(16,185,129,.12);color:#10b981;border:1px solid rgba(16,185,129,.3)}
+.result.err{display:block;background:rgba(239,68,68,.12);color:#ef4444;border:1px solid rgba(239,68,68,.3)}
+.result.dup{display:block;background:rgba(245,158,11,.12);color:#f59e0b;border:1px solid rgba(245,158,11,.3)}
+.reg-box{background:#111827;border:1px solid #1f2937;border-radius:12px;padding:30px;text-align:center;max-width:400px;margin:60px auto}
+.reg-box h2{color:#818cf8;margin-bottom:16px}
+.reg-box input{width:100%;padding:12px;background:#0f172a;border:1px solid #2a3050;border-radius:8px;color:#e0e7ff;font-size:16px;text-align:center;margin-bottom:12px}
+.progress-bar{background:#1f2937;border-radius:4px;height:8px;margin-top:8px}
+.progress-fill{background:linear-gradient(90deg,#6366f1,#818cf8);height:100%;border-radius:4px;transition:width .5s}
+.topology{font-family:monospace;font-size:11px;color:#6b7280;line-height:1.4;white-space:pre;background:#0a0e1a;padding:16px;border-radius:8px;border:1px solid #1f2937;overflow-x:auto}
+.topology .dmz{color:#3b82f6}
+.topology .corp{color:#f59e0b}
+.topology .rest{color:#ef4444}
+.topology .host{color:#10b981}
+</style>
+</head>
+<body>
+<div class="header">
+<div class="shield">🛡️</div>
+<h1>DIGITAL SHIELD CORPORATION</h1>
+<div class="sub">Red Team Assessment — CTF Scoreboard</div>
+</div>
+
+<div class="container">
+
+<!-- Registration (shown if no player) -->
+<div id="reg-section" style="display:none">
+<div class="reg-box">
+<h2>🛡️ Register</h2>
+<p style="color:#6b7280;margin-bottom:16px;font-size:13px">Enter your operator name to begin the assessment</p>
+<input type="text" id="reg-name" placeholder="Operator name..." autofocus>
+<button class="btn" onclick="register()" style="width:100%">Start Assessment</button>
+</div>
+</div>
+
+<!-- Main scoreboard (shown if player registered) -->
+<div id="main-section" style="display:none">
+
+<div class="stats">
+<div class="stat"><div class="val" id="s-captured">0</div><div class="lbl">Flags Captured</div></div>
+<div class="stat"><div class="val" id="s-points">0</div><div class="lbl">Points</div></div>
+<div class="stat"><div class="val" id="s-total">10</div><div class="lbl">Total Flags</div></div>
+<div class="stat"><div class="val" id="s-pct">0%</div><div class="lbl">Completion</div></div>
+</div>
+
+<!-- Submit Flag -->
+<div class="card">
+<div class="card-head"><span>🚩</span><h2>Submit Flag</h2></div>
+<div class="card-body">
+<div class="submit-box">
+<input type="text" id="flag-input" placeholder="FLAG{...}" onkeydown="if(event.key==='Enter')submitFlag()">
+<button class="btn" onclick="submitFlag()">Submit</button>
+</div>
+<div id="flag-result" class="result"></div>
+</div>
+</div>
+
+<!-- Flag Progress -->
+<div class="card">
+<div class="card-head"><span>🎯</span><h2>Flag Progress</h2></div>
+<div class="card-body">
+<div class="progress-bar"><div class="progress-fill" id="pbar" style="width:0%"></div></div>
+<div style="text-align:right;font-size:11px;color:#6b7280;margin-top:4px"><span id="pbar-text">0 / 1750 points</span></div>
+<div class="flag-grid" id="flag-grid" style="margin-top:14px"></div>
+</div>
+</div>
+
+<!-- Network Topology -->
+<div class="card">
+<div class="card-head"><span>🌐</span><h2>Target Infrastructure</h2></div>
+<div class="card-body">
+<div class="topology">
+<span class="host">ATTACKER (You)</span>
+    │
+    ├── Port 8888 ──► <span class="dmz">ds-gateway</span>  (Corporate Website)
+    └── Port 9999 ──► Scoreboard (here)
+
+═══ <span class="dmz">DMZ (10.10.10.0/24)</span> ═══════════════════════════════════
+║  <span class="dmz">ds-gateway</span>    10.10.10.10   Web App / Company Site
+║  <span class="dmz">ds-webmail</span>    10.10.10.20   Corporate Webmail
+║  <span class="dmz">ds-devportal</span>  10.10.10.30   Developer Portal + Redis
+║  <span class="dmz">ds-jumphost</span>   10.10.10.40   SSH Bastion (→ Corporate)
+═══════════════════════════════════════════════════════════
+
+═══ <span class="corp">CORPORATE (10.10.20.0/24) [Internal]</span> ═══════════════════
+║  <span class="corp">ds-jumphost</span>   10.10.20.10   SSH Bastion (from DMZ)
+║  <span class="corp">ds-filestore</span>  10.10.20.20   FTP File Server (→ Restricted)
+║  <span class="corp">ds-monitoring</span> 10.10.20.30   Monitoring Dashboard
+═══════════════════════════════════════════════════════════
+
+═══ <span class="rest">RESTRICTED (10.10.30.0/24) [Internal]</span> ═════════════════
+║  <span class="rest">ds-filestore</span>  10.10.30.2    File Server (from Corporate)
+║  <span class="rest">ds-database</span>   10.10.30.10   PostgreSQL Database
+║  <span class="rest">ds-vault</span>      10.10.30.20   Secrets Vault API
+═══════════════════════════════════════════════════════════
+</div>
+</div>
+</div>
+
+<!-- Leaderboard -->
+<div class="card">
+<div class="card-head"><span>🏆</span><h2>Leaderboard</h2></div>
+<div class="card-body">
+<table>
+<thead><tr><th>#</th><th>Operator</th><th>Flags</th><th>Points</th></tr></thead>
+<tbody id="leaderboard"></tbody>
+</table>
+</div>
+</div>
+
+</div><!-- main-section -->
+</div><!-- container -->
+
+<div style="text-align:center;padding:30px;color:#374151;font-size:11px">
+Digital Shield Corporation — Red Team Assessment Environment<br>
+Authorized penetration testing only
+</div>
+
+<script>
+const player = '{{player}}';
+
+if (!player) {
+  document.getElementById('reg-section').style.display = 'block';
+} else {
+  document.getElementById('main-section').style.display = 'block';
+  refresh();
+  setInterval(refresh, 5000);
+}
+
+async function register() {
+  const name = document.getElementById('reg-name').value.trim();
+  if (!name) return;
+  await fetch('/api/register', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name})});
+  location.reload();
+}
+
+async function submitFlag() {
+  const input = document.getElementById('flag-input');
+  const result = document.getElementById('flag-result');
+  const flag = input.value.trim();
+  if (!flag) return;
+  const resp = await fetch('/api/submit', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({flag})});
+  const data = await resp.json();
+  result.className = 'result';
+  if (data.correct && data.already) {
+    result.classList.add('dup');
+    result.textContent = '⚠ ' + data.message;
+  } else if (data.correct) {
+    result.classList.add('ok');
+    result.textContent = '✓ ' + data.message;
+    refresh();
+  } else {
+    result.classList.add('err');
+    result.textContent = '✗ ' + (data.message || data.error);
+  }
+  input.value = '';
+}
+
+async function refresh() {
+  const [prog, lb] = await Promise.all([
+    fetch('/api/progress').then(r=>r.json()),
+    fetch('/api/leaderboard').then(r=>r.json())
+  ]);
+
+  const captured = prog.captures.length;
+  document.getElementById('s-captured').textContent = captured;
+  document.getElementById('s-points').textContent = prog.total_points;
+  document.getElementById('s-pct').textContent = Math.round(prog.total_points/prog.max_points*100)+'%';
+  document.getElementById('pbar').style.width = (prog.total_points/prog.max_points*100)+'%';
+  document.getElementById('pbar-text').textContent = prog.total_points + ' / ' + prog.max_points + ' points';
+
+  document.getElementById('flag-grid').innerHTML = prog.flags.map(f =>
+    '<div class="flag-cell '+(f.captured?'captured':'')+'">' +
+    '<div class="num">'+(f.captured?'✓':f.id)+'</div>' +
+    '<div class="name">'+f.name+'</div>' +
+    '<div class="pts">'+f.points+' pts</div>' +
+    '<div class="diff diff-'+f.difficulty+'">'+f.difficulty+'</div></div>'
+  ).join('');
+
+  document.getElementById('leaderboard').innerHTML = lb.map((p,i) =>
+    '<tr><td style="color:#6366f1;font-weight:600">#'+(i+1)+'</td><td>'+p.name+'</td><td>'+p.flags+'/10</td><td style="color:#818cf8;font-weight:600">'+p.points+'</td></tr>'
+  ).join('') || '<tr><td colspan="4" style="text-align:center;color:#6b7280;padding:20px">No players yet</td></tr>';
+}
+</script>
+</body>
+</html>

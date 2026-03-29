@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>DS Monitoring</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{background:#0a1628;color:#c8d6e5;font-family:'Segoe UI',sans-serif}
+.nav{background:#111d32;border-bottom:1px solid #1a2d4a;padding:12px 24px;display:flex;justify-content:space-between}
+.nav .logo{color:#10b981;font-weight:700;font-size:16px}.nav a{color:#5a6f8a;font-size:13px;text-decoration:none;margin-left:16px}.nav a:hover{color:#10b981}
+.container{max-width:1000px;margin:24px auto;padding:0 20px}
+h2{font-size:20px;color:#fff;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:24px}
+.status-card{background:#111d32;border:1px solid #1a2d4a;border-radius:10px;padding:16px}
+.status-card .name{font-size:13px;font-weight:600;color:#c8d6e5}
+.status-card .ip{font-size:11px;color:#5a6f8a;font-family:monospace}
+.status-card .state{margin-top:6px;font-size:11px;padding:3px 8px;border-radius:4px;display:inline-block}
+.state-up{background:rgba(16,185,129,.15);color:#10b981}
+.state-down{background:rgba(239,68,68,.15);color:#ef4444}
+.card{background:#111d32;border:1px solid #1a2d4a;border-radius:10px;padding:20px;margin-bottom:16px}
+.card h3{color:#10b981;font-size:15px;margin-bottom:10px}
+.field{margin-bottom:10px}.field label{display:block;font-size:11px;color:#5a6f8a;margin-bottom:4px}
+.field input{padding:8px 12px;background:#0a1628;border:1px solid #1a2d4a;border-radius:6px;color:#c8d6e5;font-size:13px;width:200px}
+.btn{padding:8px 16px;background:#10b981;color:#0a1628;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:13px}
+pre{background:#0a0e1a;border:1px solid #1a2d4a;padding:12px;border-radius:8px;font-size:11px;overflow-x:auto;max-height:300px}
+</style></head><body>
+<div class="nav"><span class="logo">📊 DS Monitoring</span>
+<div><a href="/">Dashboard</a><a href="/config">Config</a><a href="/logs">Logs</a></div></div>
+<div class="container">
+<h2>Infrastructure Status</h2>
+<div class="grid">
+<div class="status-card"><div class="name">ds-gateway</div><div class="ip">10.10.10.10</div><div class="state state-up">UP</div></div>
+<div class="status-card"><div class="name">ds-webmail</div><div class="ip">10.10.10.20</div><div class="state state-up">UP</div></div>
+<div class="status-card"><div class="name">ds-devportal</div><div class="ip">10.10.10.30</div><div class="state state-up">UP</div></div>
+<div class="status-card"><div class="name">ds-jumphost</div><div class="ip">10.10.10.40</div><div class="state state-up">UP</div></div>
+<div class="status-card"><div class="name">ds-filestore</div><div class="ip">10.10.20.20</div><div class="state state-up">UP</div></div>
+<div class="status-card"><div class="name">ds-database</div><div class="ip">10.10.30.10</div><div class="state state-up">UP</div></div>
+<div class="status-card"><div class="name">ds-vault</div><div class="ip">10.10.30.20</div><div class="state state-up">UP</div></div>
+<div class="status-card"><div class="name">Backup Server</div><div class="ip">10.10.20.99</div><div class="state state-down">DOWN</div></div>
+</div>
+
+<div class="card">
+<h3>🔍 Run Network Check</h3>
+<form method="POST" action="/check" style="display:flex;gap:8px;align-items:end">
+<div class="field"><label>Host</label><input name="host" placeholder="10.10.20.20"></div>
+<div class="field"><label>Port</label><input name="port" value="22" style="width:80px"></div>
+<button type="submit" class="btn">Check</button>
+</form>
+{% if check_output %}<pre style="margin-top:12px">{{ check_output }}</pre>{% endif %}
+</div>
+</div></body></html>

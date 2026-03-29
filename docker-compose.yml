@@ -1,0 +1,142 @@
+###############################################################
+#  Digital Shield Corporation — Attack Lab
+#  Multi-network pivoting environment for C2 testing
+#
+#  Topology:
+#    DMZ (10.10.10.0/24)           — Internet-facing
+#    CORPORATE (10.10.20.0/24)     — Internal (no direct host access)
+#    RESTRICTED (10.10.30.0/24)    — Internal (no direct host access)
+#    MANAGEMENT (10.10.40.0/24)    — Scoreboard only
+#
+#  Ports exposed:
+#    8888  → ds-gateway (company website)
+#    9999  → ds-scoreboard (CTF scoreboard)
+#
+###############################################################
+
+networks:
+  dmz:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.10.0/24
+  corporate:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.10.20.0/24
+  restricted:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.10.30.0/24
+  management:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.40.0/24
+
+services:
+
+  # ──── DMZ ────
+
+  ds-gateway:
+    build: ./ds-gateway
+    container_name: ds-gateway
+    hostname: ds-gateway
+    networks:
+      dmz:
+        ipv4_address: 10.10.10.10
+    ports:
+      - "8888:5000"
+    cap_add:
+      - SYS_PTRACE
+    restart: unless-stopped
+
+  ds-webmail:
+    build: ./ds-webmail
+    container_name: ds-webmail
+    hostname: ds-webmail
+    networks:
+      dmz:
+        ipv4_address: 10.10.10.20
+    restart: unless-stopped
+
+  ds-devportal:
+    build: ./ds-devportal
+    container_name: ds-devportal
+    hostname: ds-devportal
+    networks:
+      dmz:
+        ipv4_address: 10.10.10.30
+    restart: unless-stopped
+
+  # ──── DMZ ↔ CORPORATE BRIDGE ────
+
+  ds-jumphost:
+    build: ./ds-jumphost
+    container_name: ds-jumphost
+    hostname: ds-jumphost
+    networks:
+      dmz:
+        ipv4_address: 10.10.10.40
+      corporate:
+        ipv4_address: 10.10.20.10
+    restart: unless-stopped
+
+  # ──── CORPORATE ────
+
+  ds-filestore:
+    build: ./ds-filestore
+    container_name: ds-filestore
+    hostname: ds-filestore
+    networks:
+      corporate:
+        ipv4_address: 10.10.20.20
+      restricted:
+        ipv4_address: 10.10.30.2
+    restart: unless-stopped
+
+  ds-monitoring:
+    build: ./ds-monitoring
+    container_name: ds-monitoring
+    hostname: ds-monitoring
+    networks:
+      corporate:
+        ipv4_address: 10.10.20.30
+    restart: unless-stopped
+
+  # ──── RESTRICTED ────
+
+  ds-database:
+    build: ./ds-database
+    container_name: ds-database
+    hostname: ds-database
+    networks:
+      restricted:
+        ipv4_address: 10.10.30.10
+    restart: unless-stopped
+
+  ds-vault:
+    build: ./ds-vault
+    container_name: ds-vault
+    hostname: ds-vault
+    networks:
+      restricted:
+        ipv4_address: 10.10.30.20
+    restart: unless-stopped
+
+  # ──── MANAGEMENT ────
+
+  ds-scoreboard:
+    build: ./ds-scoreboard
+    container_name: ds-scoreboard
+    hostname: ds-scoreboard
+    networks:
+      management:
+        ipv4_address: 10.10.40.10
+    ports:
+      - "9999:5000"
+    restart: unless-stopped

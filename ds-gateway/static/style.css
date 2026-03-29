@@ -1,0 +1,57 @@
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a1628;color:#c8d6e5;font-family:'Segoe UI',system-ui,sans-serif}
+a{color:#00b4d8;text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* Navbar */
+.navbar{background:rgba(10,22,40,.95);border-bottom:1px solid #1a2d4a;padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
+.navbar .logo{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:700;color:#00b4d8}
+.navbar .logo .shield{font-size:28px}
+.navbar nav a{color:#8b9dc3;padding:8px 16px;font-size:14px;transition:color .2s}
+.navbar nav a:hover,.navbar nav a.active{color:#00b4d8;text-decoration:none}
+
+/* Hero */
+.hero{text-align:center;padding:100px 40px 80px;background:linear-gradient(180deg,#0a1628 0%,#0d1f3c 100%)}
+.hero .icon{font-size:80px;margin-bottom:20px}
+.hero h1{font-size:42px;color:#ffffff;margin-bottom:12px;line-height:1.2}
+.hero h1 span{color:#00b4d8}
+.hero p{font-size:18px;color:#8b9dc3;max-width:600px;margin:0 auto 30px}
+.hero .btn{display:inline-block;padding:14px 32px;background:#00b4d8;color:#0a1628;border-radius:8px;font-weight:700;font-size:15px;transition:background .2s}
+.hero .btn:hover{background:#0096b7;text-decoration:none}
+
+/* Sections */
+.section{padding:80px 40px;max-width:1100px;margin:0 auto}
+.section h2{font-size:28px;color:#ffffff;margin-bottom:8px}
+.section .subtitle{color:#8b9dc3;font-size:15px;margin-bottom:32px}
+.section-alt{background:#0d1f3c}
+
+/* Service Grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+.card{background:#111d32;border:1px solid #1a2d4a;border-radius:12px;padding:28px;transition:border-color .3s}
+.card:hover{border-color:#00b4d8}
+.card .icon{font-size:36px;margin-bottom:12px}
+.card h3{color:#ffffff;font-size:17px;margin-bottom:8px}
+.card p{color:#8b9dc3;font-size:13px;line-height:1.6}
+
+/* Team */
+.team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.team-card{background:#111d32;border:1px solid #1a2d4a;border-radius:12px;padding:24px;text-align:center}
+.team-card .avatar{width:64px;height:64px;border-radius:50%;background:#1a2d4a;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:28px}
+.team-card h4{color:#ffffff;font-size:15px}
+.team-card .role{color:#00b4d8;font-size:12px;margin-top:2px}
+.team-card .email{color:#5a6f8a;font-size:11px;margin-top:6px;font-family:monospace}
+
+/* Footer */
+.footer{background:#060e1a;border-top:1px solid #1a2d4a;padding:24px 40px;text-align:center;color:#3d5272;font-size:11px}
+
+/* Admin */
+.login-box{max-width:380px;margin:80px auto;background:#111d32;border:1px solid #1a2d4a;border-radius:16px;padding:40px}
+.login-box h2{text-align:center;color:#00b4d8;margin-bottom:20px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:11px;color:#5a6f8a;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.field input{width:100%;padding:11px 14px;background:#0a1628;border:1px solid #1a2d4a;border-radius:8px;color:#c8d6e5;font-size:14px}
+.field input:focus{border-color:#00b4d8;outline:none}
+.btn-full{width:100%;padding:12px;background:#00b4d8;color:#0a1628;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;margin-top:8px}
+.btn-full:hover{background:#0096b7}
+.error-msg{background:rgba(239,68,68,.12);color:#ef4444;border:1px solid rgba(239,68,68,.25);padding:10px;border-radius:8px;margin-bottom:14px;font-size:13px;text-align:center}
+pre{background:#0a1628;padding:14px;border-radius:8px;font-size:12px;overflow-x:auto;border:1px solid #1a2d4a}

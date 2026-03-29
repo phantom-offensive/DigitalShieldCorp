@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin Dashboard — Digital Shield</title><link rel="stylesheet" href="/static/style.css"></head>
+<body>
+<div class="navbar"><div class="logo"><span class="shield">🛡️</span> DS Admin Panel</div>
+<nav><a href="/admin/dashboard" class="active">Dashboard</a><a href="/">Public Site</a><a href="/admin" style="color:#ef4444">Logout</a></nav></div>
+<div class="section">
+<h2>Administration Dashboard</h2>
+<p class="subtitle">Welcome, administrator</p>
+
+<div class="grid" style="grid-template-columns:1fr 1fr;margin-bottom:24px">
+<div class="card">
+<h3>🏥 Site Health Check</h3>
+<p style="margin-bottom:12px;color:#5a6f8a;font-size:12px">Run connectivity checks against internal hosts</p>
+<form method="POST" action="/admin/healthcheck">
+<div class="field"><label>Target Host</label><input type="text" name="target" placeholder="hostname or IP"></div>
+<button type="submit" class="btn-full">Run Check</button>
+</form>
+{% if check_output %}<pre style="margin-top:12px;max-height:300px;overflow-y:auto">{{ check_output }}</pre>{% endif %}
+</div>
+
+<div class="card">
+<h3>📤 Upload File</h3>
+<p style="margin-bottom:12px;color:#5a6f8a;font-size:12px">Upload files to the staging directory</p>
+<form method="POST" action="/admin/upload" enctype="multipart/form-data">
+<div class="field"><label>Select File</label><input type="file" name="file" required style="padding:8px"></div>
+<button type="submit" class="btn-full">Upload</button>
+</form>
+</div>
+</div>
+
+<div class="card">
+<h3>📊 Infrastructure Overview</h3>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px">
+<div style="background:#0a1628;padding:14px;border-radius:8px;border:1px solid #1a2d4a">
+<div style="color:#10b981;font-size:11px;text-transform:uppercase">DMZ</div>
+<div style="color:#c8d6e5;font-size:13px;margin-top:4px">Gateway, Webmail, DevPortal</div>
+</div>
+<div style="background:#0a1628;padding:14px;border-radius:8px;border:1px solid #1a2d4a">
+<div style="color:#f59e0b;font-size:11px;text-transform:uppercase">Corporate</div>
+<div style="color:#c8d6e5;font-size:13px;margin-top:4px">Jumphost, Filestore, Monitoring</div>
+</div>
+<div style="background:#0a1628;padding:14px;border-radius:8px;border:1px solid #1a2d4a">
+<div style="color:#ef4444;font-size:11px;text-transform:uppercase">Restricted</div>
+<div style="color:#c8d6e5;font-size:13px;margin-top:4px">Database, Vault</div>
+</div>
+</div>
+</div>
+</div>
+<div class="footer">&copy; 2026 Digital Shield Corporation — Admin Panel</div>
+</body></html>

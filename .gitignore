@@ -1,0 +1,8 @@
+*.pyc
+__pycache__/
+*.db
+*.log
+WALKTHROUGH.md
+*.pdf
+/tmp/
+.env.local

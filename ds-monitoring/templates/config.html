@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Config — DS Monitoring</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{background:#0a1628;color:#c8d6e5;font-family:'Segoe UI',sans-serif}
+.nav{background:#111d32;border-bottom:1px solid #1a2d4a;padding:12px 24px;display:flex;justify-content:space-between}
+.nav .logo{color:#10b981;font-weight:700;font-size:16px}.nav a{color:#5a6f8a;font-size:13px;text-decoration:none;margin-left:16px}
+.container{max-width:900px;margin:24px auto;padding:0 20px}
+pre{background:#0a0e1a;border:1px solid #1a2d4a;padding:16px;border-radius:8px;font-size:12px}
+.warn{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);border-radius:8px;padding:12px;color:#f59e0b;font-size:13px;margin-bottom:16px}
+</style></head><body>
+<div class="nav"><span class="logo">📊 DS Monitoring</span><div><a href="/">Dashboard</a><a href="/config">Config</a><a href="/logs">Logs</a></div></div>
+<div class="container">
+<h2 style="font-size:20px;color:#fff;margin-bottom:16px">Monitoring Configuration</h2>
+<div class="warn">⚠ Configuration contains sensitive database credentials</div>
+<pre>{{ config | tojson(indent=2) }}</pre>
+</div></body></html>

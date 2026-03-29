@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Git Log — DS DevPortal</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{background:#0a1628;color:#c8d6e5;font-family:'Segoe UI',sans-serif}
+.nav{background:#111d32;border-bottom:1px solid #1a2d4a;padding:12px 24px;display:flex;justify-content:space-between;align-items:center}
+.nav .logo{color:#00b4d8;font-weight:700;font-size:16px}.nav a{color:#5a6f8a;font-size:13px;text-decoration:none;margin-left:16px}
+.container{max-width:900px;margin:24px auto;padding:0 20px}
+h2{font-size:20px;color:#fff;margin-bottom:16px}
+.commit{background:#111d32;border:1px solid #1a2d4a;border-radius:10px;padding:16px 20px;margin-bottom:8px}
+.commit .hash{color:#f59e0b;font-family:monospace;font-size:12px}
+.commit .msg{color:#c8d6e5;font-size:14px;margin-top:4px}
+.commit .author{color:#5a6f8a;font-size:12px;margin-top:4px}
+.commit .files{color:#3d5272;font-size:11px;margin-top:4px;font-family:monospace}
+</style></head><body>
+<div class="nav"><span class="logo">💻 DS DevPortal</span><div><a href="/dashboard">Dashboard</a><a href="/logout">Logout</a></div></div>
+<div class="container">
+<h2>📜 deploy-scripts — Git Log</h2>
+{% for c in commits %}
+<div class="commit">
+<span class="hash">{{ c.hash }}</span>
+<div class="msg">{{ c.message }}</div>
+<div class="author">Author: {{ c.author }}</div>
+<div class="files">Files: {{ c.files | join(', ') }}</div>
+</div>
+{% endfor %}
+</div></body></html>

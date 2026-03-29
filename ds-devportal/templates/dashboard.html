@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>DS DevPortal</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{background:#0a1628;color:#c8d6e5;font-family:'Segoe UI',sans-serif}
+.nav{background:#111d32;border-bottom:1px solid #1a2d4a;padding:12px 24px;display:flex;justify-content:space-between;align-items:center}
+.nav .logo{color:#00b4d8;font-weight:700;font-size:16px}.nav a{color:#5a6f8a;font-size:13px;text-decoration:none;margin-left:16px}.nav a:hover{color:#00b4d8}
+.container{max-width:900px;margin:24px auto;padding:0 20px}
+h2{font-size:20px;color:#fff;margin-bottom:16px}
+.card{background:#111d32;border:1px solid #1a2d4a;border-radius:10px;padding:20px;margin-bottom:12px}
+.card h3{color:#00b4d8;font-size:15px;margin-bottom:8px}
+.badge{display:inline-block;padding:3px 8px;border-radius:4px;font-size:10px;font-weight:600;text-transform:uppercase}
+.badge-admin{background:rgba(239,68,68,.15);color:#ef4444}
+.badge-contractor{background:rgba(59,130,246,.15);color:#3b82f6}
+a{color:#00b4d8;text-decoration:none}a:hover{text-decoration:underline}
+</style></head><body>
+<div class="nav"><span class="logo">💻 DS DevPortal</span>
+<div><span class="badge {% if is_admin %}badge-admin{% else %}badge-contractor{% endif %}">{{ 'Admin' if is_admin else 'Contractor' }}</span>
+<span style="color:#8b9dc3;font-size:13px;margin-left:8px">{{ user }}</span>
+<a href="/logout">Logout</a></div></div>
+<div class="container">
+<h2>Dashboard</h2>
+<div class="card"><h3>📦 Repositories</h3>
+<p><a href="/repo/log">deploy-scripts</a> — Automated deployment scripts</p>
+<p style="margin-top:6px"><a href="/repo/view?file=README.md">View README</a></p>
+</div>
+{% if is_admin %}
+<div class="card" style="border-color:#ef4444">
+<h3>🚀 Deployment Console <span class="badge badge-admin">Admin Only</span></h3>
+<p><a href="/deploy">Open Deployment Panel</a></p>
+</div>
+{% else %}
+<div class="card" style="opacity:0.5">
+<h3>🚀 Deployment Console <span class="badge badge-admin">Admin Only</span></h3>
+<p style="color:#3d5272">Requires admin access</p>
+</div>
+{% endif %}
+</div></body></html>
