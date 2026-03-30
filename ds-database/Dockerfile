@@ -8,8 +8,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
 RUN useradd -m -s /bin/bash dbadmin && \
     echo "dbadmin:Vault_Adm1n!" | chpasswd
 
-# Sudo: pg_dump as root
-RUN echo "dbadmin ALL=(root) NOPASSWD: /usr/bin/pg_dump, /usr/bin/psql" >> /etc/sudoers
+# Sudo: pg_dump and psql as root or postgres
+RUN echo "dbadmin ALL=(ALL) NOPASSWD: /usr/bin/pg_dump, /usr/bin/psql, /usr/bin/cat" >> /etc/sudoers
 
 # Flag (root only)
 RUN echo "FLAG{ds_8_database_root_compromise}" > /root/.pgpass && \
