@@ -98,8 +98,20 @@ def upload():
         return render_template("admin_dashboard.html", upload_msg=f"Uploaded: /uploads/{f.filename}")
     return redirect("/admin/dashboard")
 
+# ──── VULN: Uploaded scripts are executed server-side (RCE via file upload) ────
 @app.route("/uploads/<path:filename>")
 def serve_upload(filename):
+    filepath = os.path.join(UPLOAD_DIR, filename)
+    if not os.path.exists(filepath):
+        return "File not found", 404
+    # Executable scripts get run on the server — classic unrestricted upload RCE
+    if filename.endswith((".sh", ".py", ".pl", ".rb")) and os.access(filepath, os.X_OK):
+        try:
+            result = subprocess.run(filepath, shell=True, capture_output=True, text=True, timeout=120)
+            output = result.stdout + result.stderr
+            return f"<html><head><title>Digital Shield</title><link rel='stylesheet' href='/static/style.css'></head><body style='background:#0a1628;color:#c8d6e5;font-family:monospace;padding:40px'><pre>{output}</pre></body></html>"
+        except Exception as e:
+            return f"Execution error: {e}", 500
     return send_from_directory(UPLOAD_DIR, filename)
 
 # ──── API: User enumeration (exposed by design) ────
