@@ -95,49 +95,70 @@ def upload():
         save_path = os.path.join(UPLOAD_DIR, f.filename)
         f.save(save_path)
         os.chmod(save_path, 0o755)
-        return render_template("admin_dashboard.html", upload_msg=f"Uploaded: /uploads/{f.filename}")
+        return redirect("/uploads/")
     return redirect("/admin/dashboard")
 
-# ──── VULN: Uploaded scripts are executed server-side (RCE via file upload) ────
-@app.route("/uploads/<path:filename>", methods=["GET", "POST"])
-def serve_upload(filename):
+# ──── VULN: Directory listing of uploads — shows all uploaded files ────
+@app.route("/uploads/")
+def list_uploads():
+    files = []
+    if os.path.isdir(UPLOAD_DIR):
+        for fname in sorted(os.listdir(UPLOAD_DIR)):
+            fpath = os.path.join(UPLOAD_DIR, fname)
+            size = os.path.getsize(fpath)
+            files.append({"name": fname, "size": size})
+    rows = ""
+    for f in files:
+        is_script = f["name"].endswith((".sh", ".py", ".php", ".pl", ".rb"))
+        run_link = f' &nbsp; <a href="/uploads/{f["name"]}/run" style="color:#10b981;font-size:12px">[Execute]</a>' if is_script else ""
+        rows += f'<tr><td><a href="/uploads/{f["name"]}" style="color:#00b4d8">{f["name"]}</a>{run_link}</td><td style="color:#6b7280">{f["size"]} bytes</td></tr>\n'
+    if not rows:
+        rows = '<tr><td colspan="2" style="color:#6b7280;padding:20px;text-align:center">No files uploaded yet</td></tr>'
+    return f'''<html><head><title>Uploads — Digital Shield</title><link rel="stylesheet" href="/static/style.css"></head>
+<body style="background:#0a1628;color:#c8d6e5;font-family:monospace;padding:40px">
+<h2>Uploaded Files</h2>
+<p style="color:#5a6f8a;font-size:12px;margin-bottom:16px">Click [Execute] to run scripts on the server</p>
+<table style="width:100%;border-collapse:collapse;">
+<thead><tr style="border-bottom:1px solid #1a2d4a"><th style="text-align:left;padding:8px;color:#8b9dc3">File</th><th style="text-align:left;padding:8px;color:#8b9dc3">Size</th></tr></thead>
+<tbody>{rows}</tbody></table>
+<p style="margin-top:20px"><a href="/admin/dashboard" style="color:#00b4d8">Back to Dashboard</a></p>
+</body></html>'''
+
+# ──── VULN: Execute uploaded scripts (RCE via file upload) ────
+@app.route("/uploads/<path:filename>/run")
+def run_upload(filename):
     fpath = os.path.join(UPLOAD_DIR, filename)
     if not os.path.exists(fpath):
         return "File not found", 404
-
-    # PHP webshells — execute via php-cli, pass headers and POST data as env vars
-    if filename.endswith(".php"):
+    try:
+        if filename.endswith(".sh"):
+            result = subprocess.Popen(["bash", fpath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        elif filename.endswith(".py"):
+            result = subprocess.Popen(["python3", fpath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        elif filename.endswith(".php"):
+            result = subprocess.Popen(["php", fpath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        elif filename.endswith((".pl", ".rb")):
+            result = subprocess.Popen([fpath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        else:
+            return "Not an executable script", 400
+        # Wait up to 5 seconds for immediate output, but don't block on long-running processes
         try:
-            env = os.environ.copy()
-            env["REQUEST_METHOD"] = request.method
-            env["QUERY_STRING"] = request.query_string.decode()
-            for key, value in request.headers:
-                env_key = "HTTP_" + key.upper().replace("-", "_")
-                env[env_key] = value
-            stdin_data = None
-            if request.method == "POST":
-                stdin_data = request.get_data()
-                env["CONTENT_TYPE"] = request.content_type or "application/x-www-form-urlencoded"
-                env["CONTENT_LENGTH"] = str(len(stdin_data))
-            result = subprocess.run(
-                ["php", fpath],
-                capture_output=True, text=True, timeout=120,
-                env=env, input=stdin_data.decode() if stdin_data else None
-            )
-            return result.stdout + result.stderr, 200, {"Content-Type": "text/html"}
-        except Exception as e:
-            return f"Execution error: {e}", 500
+            stdout, stderr = result.communicate(timeout=5)
+            output = stdout.decode(errors="replace") + stderr.decode(errors="replace")
+        except subprocess.TimeoutExpired:
+            output = f"Script started in background (PID: {result.pid})"
+        return f'''<html><head><title>Execute — Digital Shield</title><link rel="stylesheet" href="/static/style.css"></head>
+<body style="background:#0a1628;color:#c8d6e5;font-family:monospace;padding:40px">
+<h3 style="color:#10b981">Executed: {filename}</h3>
+<pre style="background:#0d1f3c;padding:16px;border-radius:8px;border:1px solid #1a2d4a;overflow-x:auto">{output if output.strip() else "(no output)"}</pre>
+<p style="margin-top:16px"><a href="/uploads/" style="color:#00b4d8">Back to Uploads</a></p>
+</body></html>'''
+    except Exception as e:
+        return f"Execution error: {e}", 500
 
-    # Shell/Python/Perl/Ruby scripts — execute directly
-    if filename.endswith((".sh", ".py", ".pl", ".rb")):
-        try:
-            result = subprocess.run(["bash", fpath] if filename.endswith(".sh") else ["python3", fpath] if filename.endswith(".py") else [fpath],
-                capture_output=True, text=True, timeout=120)
-            output = result.stdout + result.stderr
-            return f"<pre>{output}</pre>", 200, {"Content-Type": "text/html"}
-        except Exception as e:
-            return f"Execution error: {e}", 500
-
+# ──── Download uploaded files ────
+@app.route("/uploads/<path:filename>")
+def download_upload(filename):
     return send_from_directory(UPLOAD_DIR, filename)
 
 # ──── API: User enumeration (exposed by design) ────
