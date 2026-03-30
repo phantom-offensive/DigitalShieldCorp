@@ -74,6 +74,11 @@ def page_view():
     # Vulnerable: allows path traversal
     try:
         filepath = os.path.join("/var/www", p)
+        # VULN: If path is a directory, list its contents (misconfigured directory listing)
+        if os.path.isdir(filepath):
+            files = os.listdir(filepath)
+            listing = "\n".join(files) if files else "(empty directory)"
+            return f"<html><head><title>Digital Shield</title><link rel='stylesheet' href='/static/style.css'></head><body style='background:#0a1628;color:#c8d6e5;font-family:monospace;padding:40px'><h3>Index of /page?name={p}</h3><pre>{listing}</pre><p><a href='/' style='color:#00b4d8'>Home</a></p></body></html>"
         with open(filepath, "r") as f:
             content = f.read()
         return f"<html><head><title>Digital Shield</title><link rel='stylesheet' href='/static/style.css'></head><body style='background:#0a1628;color:#c8d6e5;font-family:monospace;padding:40px'><pre>{content}</pre><p><a href='/' style='color:#00b4d8'>Home</a></p></body></html>"
