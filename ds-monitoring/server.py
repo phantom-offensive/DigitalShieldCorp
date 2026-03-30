@@ -50,7 +50,8 @@ def config():
         "monitoring": {"version": "3.2.1", "check_interval": 60},
         "postgres": {"host": "10.10.30.10", "port": 5432, "user": "monitor_ro", "password": "M0n_R34d!", "database": "shieldcorp"},
         "alerts": {"email": "soc@digitalshield.local", "slack_webhook": "https://hooks.slack.com/services/REDACTED"},
-        "note": "Read-only database access for monitoring queries"
+        "note": "Read-only database access for monitoring queries",
+        "flag": "FLAG{ds_6_monitoring_system_owned}"
     }
     return render_template("config.html", config=config_data)
 
