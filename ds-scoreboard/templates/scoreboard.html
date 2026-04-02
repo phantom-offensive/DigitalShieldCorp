@@ -56,6 +56,11 @@ tr:hover td{background:rgba(99,102,241,.05)}
 .topology .corp{color:#f59e0b}
 .topology .rest{color:#ef4444}
 .topology .host{color:#10b981}
+.hint-btn{background:transparent;border:1px solid #2a3050;color:#6b7280;padding:3px 8px;border-radius:4px;font-size:9px;cursor:pointer;margin-top:6px;transition:all .2s}
+.hint-btn:hover{border-color:#6366f1;color:#818cf8}
+.hint-btn.active{border-color:#6366f1;color:#818cf8;background:rgba(99,102,241,.1)}
+.hint-text{color:#f59e0b;font-size:10px;margin-top:6px;padding:6px 8px;background:rgba(245,158,11,.06);border-left:2px solid #f59e0b;border-radius:0 4px 4px 0;font-style:italic;display:none;text-align:left}
+.hint-text.show{display:block}
 </style>
 </head>
 <body>
@@ -117,7 +122,13 @@ tr:hover td{background:rgba(99,102,241,.05)}
 <span class="host">ATTACKER (You)</span>
     │
     ├── Port 8888 ──► <span class="dmz">ds-gateway</span>  (Corporate Website)
+    ├── Port 8025 ──► <span class="dmz">ds-webmail</span>  (Employee Webmail)
+    ├── Port 8090 ──► <span class="corp">ds-monitoring</span> (Monitoring Dashboard)
     └── Port 9999 ──► Scoreboard (here)
+
+  <span style="color:#ef4444">NOTE: Internal IPs (10.x.x.x) are NOT reachable from your
+  browser. Use localhost ports above. Internal IPs only work
+  from inside containers after pivoting.</span>
 
 ═══ <span class="dmz">DMZ (10.10.10.0/24)</span> ═══════════════════════════════════
 ║  <span class="dmz">ds-gateway</span>    10.10.10.10   Web App / Company Site
@@ -218,12 +229,32 @@ async function refresh() {
     '<div class="num">'+(f.captured?'✓':f.id)+'</div>' +
     '<div class="name">'+f.name+'</div>' +
     '<div class="pts">'+f.points+' pts</div>' +
-    '<div class="diff diff-'+f.difficulty+'">'+f.difficulty+'</div></div>'
+    '<div class="diff diff-'+f.difficulty+'">'+f.difficulty+'</div>' +
+    (f.captured ? '' : '<button class="hint-btn" onclick="toggleHint(this,'+f.id+')">Hint</button><div class="hint-text" id="hint-'+f.id+'"></div>') +
+    '</div>'
   ).join('');
 
   document.getElementById('leaderboard').innerHTML = lb.map((p,i) =>
     '<tr><td style="color:#6366f1;font-weight:600">#'+(i+1)+'</td><td>'+p.name+'</td><td>'+p.flags+'/10</td><td style="color:#818cf8;font-weight:600">'+p.points+'</td></tr>'
   ).join('') || '<tr><td colspan="4" style="text-align:center;color:#6b7280;padding:20px">No players yet</td></tr>';
+}
+
+async function toggleHint(btn, flagId) {
+  const el = document.getElementById('hint-' + flagId);
+  if (el.classList.contains('show')) {
+    el.classList.remove('show');
+    btn.classList.remove('active');
+    btn.textContent = 'Hint';
+    return;
+  }
+  if (!el.textContent) {
+    const resp = await fetch('/api/hint', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({flag_id: flagId})});
+    const data = await resp.json();
+    el.textContent = data.hint || 'No hint available';
+  }
+  el.classList.add('show');
+  btn.classList.add('active');
+  btn.textContent = 'Hide Hint';
 }
 </script>
 </body>
