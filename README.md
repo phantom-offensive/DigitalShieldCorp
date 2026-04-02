@@ -93,6 +93,15 @@ Containers with no port mapping (must pivot to reach):
 | ds-database | 10.10.30.10 | Restricted | PostgreSQL :5432, SSH :22 |
 | ds-vault | 10.10.30.20 | Restricted | Vault API :8443, SSH :22 |
 
+### Important Notes
+
+- When SSH host keys change after container rebuild: `ssh-keygen -f ~/.ssh/known_hosts -R <ip>`
+- Use `printf` instead of `echo -e` for Redis commands (e.g., `printf "KEYS *\r\n" | nc -w 3 host 6379`)
+- Use `nc -w 3` for netcat timeout to avoid hanging connections
+- Escape `!` in bash passwords with single-quote wrapping: `'password!'`
+- For nested SSH with special characters in passwords, use hop-by-hop SSH instead of one-liners
+- If using a C2 SOCKS proxy, configure proxychains: `sudo sed -i 's|socks5.*|socks5 <agent_ip> <port>|' /etc/proxychains4.conf`
+
 ### Stop / Reset
 
 ```bash
