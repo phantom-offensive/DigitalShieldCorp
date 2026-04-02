@@ -61,7 +61,7 @@ ATTACKER (Your Machine)
 
 ```bash
 # Clone the repository
-git clone https://github.com/Phantom-C2-77/DigitalShieldCorp.git
+git clone https://github.com/phantom-offensive/DigitalShieldCorp.git
 cd DigitalShieldCorp
 
 # Start the lab
@@ -73,10 +73,25 @@ sudo docker ps
 
 ### Access
 
-| Service | URL | Description |
-|---------|-----|-------------|
-| Company Website | http://localhost:8888 | Start your recon here |
-| CTF Scoreboard | http://localhost:9999 | Submit flags & track progress |
+| Service | URL | Container | Internal IP |
+|---------|-----|-----------|-------------|
+| Company Website | http://localhost:8888 | ds-gateway | 10.10.10.10 |
+| Employee Webmail | http://localhost:8025 | ds-webmail | 10.10.10.20 |
+| Monitoring Dashboard | http://localhost:8090 | ds-monitoring | 10.10.20.30 |
+| CTF Scoreboard | http://localhost:9999 | ds-scoreboard | 10.10.40.10 |
+
+> **IMPORTANT:** Internal Docker IPs (10.10.10.x, 10.10.20.x, 10.10.30.x) are **NOT** reachable from your browser or host machine. Always use the `localhost` URLs above. Internal IPs are only accessible from **inside containers** after pivoting.
+
+Containers with no port mapping (must pivot to reach):
+
+| Container | Internal IP | Network | Services |
+|-----------|-------------|---------|----------|
+| ds-devportal | 10.10.10.30 | DMZ | Developer Portal, Redis :6379 |
+| ds-jumphost | 10.10.10.40 / 10.10.20.10 | DMZ + Corporate | SSH :22 (bridge host) |
+| ds-webserver | 10.10.20.40 | Corporate | Apache+PHP :80 |
+| ds-filestore | 10.10.20.20 / 10.10.30.2 | Corporate + Restricted | FTP :21, SSH :22 (bridge host) |
+| ds-database | 10.10.30.10 | Restricted | PostgreSQL :5432, SSH :22 |
+| ds-vault | 10.10.30.20 | Restricted | Vault API :8443, SSH :22 |
 
 ### Stop / Reset
 
@@ -136,7 +151,7 @@ Submit flags at the scoreboard: `http://localhost:9999`
 
 ## Recommended Tools
 
-- **C2 Framework** — [Phantom C2](https://github.com/Phantom-C2-77/Phantom), Sliver, Cobalt Strike, or Metasploit
+- **C2 Framework** — [Phantom C2](https://github.com/phantom-offensive/Phantom), Sliver, Cobalt Strike, or Metasploit
 - **Scanning** — nmap, rustscan
 - **Web** — Burp Suite, ffuf, nikto
 - **Brute Force** — hydra, medusa
@@ -204,7 +219,7 @@ All systems, credentials, and data are fictional. Do not deploy this lab on prod
 
 ## Author
 
-**Opeyemi Kolawole** — [GitHub](https://github.com/Phantom-C2-77) | ckkolawole77@gmail.com
+**Opeyemi Kolawole** — [GitHub](https://github.com/phantom-offensive) | ckkolawole77@gmail.com
 
 ## License
 
